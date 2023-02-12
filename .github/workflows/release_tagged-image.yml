@@ -53,4 +53,4 @@ jobs:
           app-name: 'tagged-image'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3E1E92B09E684DB38460838FA6A5F021 }}
-          package: '*.jar'
+          package: '*.war'
