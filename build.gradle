@@ -5,6 +5,11 @@ plugins {
     id 'war'
 }
 
+war {
+    enabled = true
+    archiveClassifier = ''
+}
+
 group = 'com.tagged_image'
 version = '1.0.0-SNAPSHOT'
 //sourceCompatibility = '18'
