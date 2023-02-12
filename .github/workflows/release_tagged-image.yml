@@ -25,13 +25,13 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run build with Gradle Wrapper
-        run: ./gradlew install -x test
+        run: ./gradlew biuld -x test
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: '${{ github.workspace }}/build/libs/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
