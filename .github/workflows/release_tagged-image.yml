@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/build/libs/*.war'
+          path: '${{ github.workspace }}/build/libs/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,4 +53,4 @@ jobs:
           app-name: 'tagged-image'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3E1E92B09E684DB38460838FA6A5F021 }}
-          package: '*.war'
+          package: '*.jar'
