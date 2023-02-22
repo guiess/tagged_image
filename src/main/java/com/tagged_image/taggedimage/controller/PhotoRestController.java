@@ -18,8 +18,16 @@ public class PhotoRestController {
 
     MongoPhotoService mongoPhotoService;
 
+    @Value("${test.spring.data.mongodb.uri}")
+    private String mongoUri;
+
     PhotoRestController(MongoPhotoService mongoPhotoService) {
         this.mongoPhotoService = mongoPhotoService;
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return mongoUri;
     }
 
     @PutMapping("/putPhotoWithTagRest")
