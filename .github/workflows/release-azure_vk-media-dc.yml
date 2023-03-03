@@ -1,0 +1,51 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - vk-media-dc
+
+on:
+  push:
+    branches:
+      - release-azure
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Log in to registry
+      uses: docker/login-action@v1
+      with:
+        registry: https://vkmedia.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_9a2d3a6efdc4488581f30ffa35538990 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_f65aea45c19d483da195220f1cc36927 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: vkmedia.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_9a2d3a6efdc4488581f30ffa35538990 }}/vkmedia:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'vk-media-dc'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_dd841e33d4334eb7949eef22146caca7 }}
+        images: 'vkmedia.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_9a2d3a6efdc4488581f30ffa35538990 }}/vkmedia:${{ github.sha }}'
