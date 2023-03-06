@@ -21,14 +21,20 @@ jobs:
         with:
           java-version: '8'
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Run build with Gradle Wrapper
+        run: ./gradlew assemble
+
+      - name: rename to app.jar
+        run: find ${{ github.workspace }}/build/libs/ -name "*SNAPSHOT.war" -exec sh -c 'mv "$1" "${{ github.workspace }}/build/libs/app.jar"' _ {} \;
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: '${{ github.workspace }}/build/libs/app.jar'
 
   deploy:
     runs-on: ubuntu-latest
